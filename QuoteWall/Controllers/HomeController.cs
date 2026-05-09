@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using QuoteWall.Models;
 using System.Diagnostics;
+using QuoteWall.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace QuoteWall.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDbContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public QuotesController(AppDbContext db)
+        public HomeController(ApplicationDbContext db)
         {
             _db = db;
         }
