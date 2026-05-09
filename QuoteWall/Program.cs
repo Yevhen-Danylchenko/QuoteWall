@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using QuoteWall.Data;
+
 namespace QuoteWall
 {
     public class Program
@@ -9,7 +12,18 @@ namespace QuoteWall
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Підключення EF Core + SQLite
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite("Data Source=quotes.db"));
+
             var app = builder.Build();
+
+            // Автоматичне створення БД та застосування міграцій
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                db.Database.Migrate();
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -20,7 +34,10 @@ namespace QuoteWall
             }
 
             app.UseHttpsRedirection();
-            app.UseRouting();
+
+            app.UseStaticFiles();
+
+            app.UseRouting();            
 
             app.UseAuthorization();
 

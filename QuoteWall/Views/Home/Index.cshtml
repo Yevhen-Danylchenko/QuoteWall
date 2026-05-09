@@ -1,8 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Quote>
+@{
+    ViewBag.Title = "Quotes";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <h2>Quotes</h2>
+    <p>Total: @ViewBag.TotalQuotes | Top Author: @ViewBag.TopAuthor</p>
+
+    <div class="btn-group mb-3">
+        <a class="btn btn-outline-primary" href="?">All</a>
+        <a class="btn btn-outline-primary" href="?category=Motivation">Motivation</a>
+        <a class="btn btn-outline-primary" href="?category=Humor">Humor</a>
+        <a class="btn btn-outline-primary" href="?category=Wisdom">Wisdom</a>
+        <a class="btn btn-outline-primary" href="?category=Tech">Tech</a>
+    </div>
+
+    <div class="btn-group mb-3">
+        <a class="btn btn-outline-secondary" href="?sort=likes">Sort by Likes</a>
+        <a class="btn btn-outline-secondary" href="?sort=date">Sort by Date</a>
+        <a class="btn btn-outline-secondary" href="?sort=author">Sort by Author</a>
+    </div>
+
+    <a class="btn btn-success mb-3" asp-action="Create">Add Quote</a>
+
+    <div class="list-group">
+        @foreach (var q in Model)
+        {
+            <div class="list-group-item">
+                <blockquote>@q.Text</blockquote>
+                <footer>@q.Author (@q.Category)</footer>
+                <p>Likes: @q.Likes | Created: @q.CreatedAt</p>
+                <form asp-action="Like" method="post">
+                    <input type="hidden" name="id" value="@q.Id" />
+                    <button class="btn btn-sm btn-outline-danger">❤️ Like</button>
+                    <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-route-id="@q.Id">Details</a>
+                </form>
+            </div>
+        }
+    </div>
 </div>
+
